@@ -39,6 +39,10 @@ class DateIntervalParser
         $this->tokens = $tokens;
     }
 
+    /**
+     * @param $additionalAliases
+     * @throws DateIntervalParseException
+     */
     private function mergeAdditionalAliases($additionalAliases)
     {
         $aliasKeys = array_keys($this->aliases);
@@ -66,14 +70,35 @@ class DateIntervalParser
 
     /**
      * @param string $input
+     */
+    private function cleanupString(&$input)
+    {
+        $input = trim($input);
+    }
+
+    /**
+     * @param string $input
      * @throws DateIntervalParseException
      */
     private function process($input)
     {
+        $this->cleanupString($input);
+        $this->checkInvert($input);
+
         $matches = preg_split("/[\s]+/", $input);
         foreach ($matches as $match) {
             $this->processTerm($match);
+        }
+    }
 
+    /**
+     * @param $input
+     */
+    private function checkInvert(&$input)
+    {
+        if (substr($input, 0, 1) == '-') {
+            $this->dateTimeInterval->invert = 1;
+            $input = substr($input, 1);
         }
     }
 
@@ -81,14 +106,14 @@ class DateIntervalParser
      * @param $input
      * @throws \Exception
      */
-    private function  processTerm($input)
+    private function processTerm($input)
     {
         if (!preg_match('/(\d+)\s*([a-z]+)/i', $input, $matches)) {
             throw new DateIntervalParseException(sprintf('Unable to parse "%s"', $input));
         }
         $tokenAliased = $matches[2];
         if (!array_key_exists($tokenAliased, $this->tokens)) {
-            throw new DateIntervalParseException(sprintf('To token found for "%s"', $tokenAliased));
+            throw new DateIntervalParseException(sprintf('No token found for "%s"', $tokenAliased));
         }
 
         $token = $this->tokens[$tokenAliased];
