@@ -1,0 +1,28 @@
+{
+  "name": "hvanoch/dateintervalparser",
+  "description": "Parses string input to DateInterval: 5w 3d 4h 12s, with support of aliases",
+  "keywords": [
+    "php",
+    "date",
+    "time",
+    "parse"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "Henne Van Och",
+      "email": "henne.van.och@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.3"
+  },
+  "autoload": {
+    "psr-4": {"Hvanoch\\Component\\DateIntervalParser\\": ""}
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.1-dev"
+    }
+  }
+}
